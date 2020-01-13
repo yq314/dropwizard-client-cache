@@ -42,7 +42,7 @@ public class CachingInstrumentedHttpRequestExecutor extends InstrumentedHttpRequ
     @Override
     public HttpResponse execute(HttpRequest request, HttpClientConnection conn, HttpContext context) throws HttpException, IOException {
         HttpResponse response = super.execute(request, conn, context);
-        CacheResponseStatus responseStatus = (CacheResponseStatus) context.getAttribute(HttpCacheContext.CACHE_RESPONSE_STATUS);
+        CacheResponseStatus responseStatus = ((HttpCacheContext) context).getCacheResponseStatus();
         String metricName = this.metricNameStrategy.getNameFor(this.name, request);
         this.registry.meter(MetricRegistry.name(metricName, responseStatus.toString().toLowerCase())).mark();
         return response;
